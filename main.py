@@ -19,20 +19,40 @@ def count_characters(text):
                 char_dict[char] += 1
             else:
                 char_dict[char] = 1
-    return dict(sorted(char_dict.items()))
+    return char_dict
+
+
+def strip_non_alpha(characters):
+    characters_without_symbols = {}
+
+    for char in characters:
+        if char.isalpha():
+            characters_without_symbols[char] = characters[char]
+    return characters_without_symbols
+
+
+def dict_to_list(dict_obj):
+    return [{"char": key, "count": value} for key, value in dict_obj.items()]
 
 
 def main():
-    text = read_book("books/frankenstein.txt")
-    print(text)
+    path = "books/frankenstein.txt"
+    print(f"--- Begin report of {path} ---\n")
+
+    text = read_book(path)
 
     words = count_words(text)
     print(f"There are { words } words in this book.\n")
 
-    print("The character counts in this book are: ")
+    print("Character count:")
+
     characters = count_characters(text)
-    for char in characters:
-        print(char, characters[char])
+    characters_without_symbols = strip_non_alpha(characters)
+
+    char_list = dict_to_list(characters_without_symbols)
+    char_list.sort(key=lambda x: x["count"], reverse=True)
+    for item in char_list:
+        print(f"{item['char']} : {item['count']}")
 
 
 main()
